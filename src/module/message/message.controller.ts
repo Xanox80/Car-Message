@@ -22,14 +22,15 @@ import { MessageDto, MessageResponseDto } from 'src/common';
 export class MessageController {
   constructor(private readonly messageService: MessageService) {}
 
-  // @ApiOperation({ description: 'Create a new message' })
-  // @HttpCode(HttpStatus.OK)
-  // @ApiResponse({ type: MessageResponseDto })
-  // @Post('/createMessage')
-  // async createMessage(@Body() messageDto: MessageDto): Promise<any> {
-  //   console.log('Received messageDto:', messageDto);
-  //   return await this.messageService.createMessage(messageDto);
-  // }
+  @ApiOperation({ description: 'Create a new message' })
+  @HttpCode(HttpStatus.OK)
+  @ApiResponse({ type: MessageResponseDto })
+  @Post('/createMessage')
+  @Post('createMessage')
+  async createMessage(@Body() messageDto: MessageDto): Promise<any> {
+    console.log('Received messageDto:', messageDto); // Лог для перевірки
+    return await this.messageService.createMessage(messageDto);
+  }
 
   @ApiOperation({ description: 'Create a new message' })
   @HttpCode(HttpStatus.OK)

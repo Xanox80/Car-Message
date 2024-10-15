@@ -6,9 +6,9 @@ import { MessageDto, MessageRequestDto } from 'src/common';
 export class MessageService {
   constructor(private readonly messageRepository: MessageRepository) {}
 
-  async createMessage(messageParams: MessageRequestDto) {
-    console.log('Received messageParams:', messageParams);
-    return await this.messageRepository.createMessage(messageParams);
+  async createMessage(messageDto: MessageDto): Promise<any> {
+    console.log('Data received in createMessage:', messageDto);
+    return this.messageRepository.createMessage(messageDto);
   }
 
   async getMessage() {

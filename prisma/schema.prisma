@@ -8,8 +8,8 @@ datasource db {
 }
 
 model Message {
-  id      String @id @default(cuid())
-  text String @db.VarChar(255)
+  id        Int      @default(autoincrement()) @id
+  text    String @db.VarChar(255)
   number  Int
 }
 
