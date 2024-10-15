@@ -4,12 +4,12 @@ import { Module } from '@nestjs/common';
 import { MessageController } from './message.controller';
 
 const providers = [MessageService];
-const modules = [RepositoryModule]; // Renaming 'module' to 'importsModule'
+const imports = [RepositoryModule];
 
 @Module({
-  imports: [...modules],
+  imports,
   controllers: [MessageController],
   providers,
-  exports: [...providers],
+  exports: providers,
 })
 export class MessageModule {}

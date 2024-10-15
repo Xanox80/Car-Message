@@ -13,7 +13,7 @@ import {
   ApiOperation,
 } from '@nestjs/swagger';
 import { MessageService } from './message.service';
-import { MessageDto, MessageResponseDto } from 'src/common';
+import { MessageDto, MessageResponseDto } from './dto';
 
 @Controller('message')
 @ApiTags('Message')
