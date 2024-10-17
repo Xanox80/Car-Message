@@ -1,4 +1,5 @@
-import { getSafeEnv } from 'src/common/utils';
+import { getSafeEnv } from 'utils';
+import * as env from 'env-var';
 
 export const getConfig = () => {
   return {
@@ -26,3 +27,9 @@ export const getConfig = () => {
     csipp_user_agent: getSafeEnv('CSIPP_USER_AGENT'),
   };
 };
+export const getAuthSecret = () => ({
+  atSecret: env.get('AT_SECRET').required().asString(),
+  atSecretExpires: env.get('AT_SECRET_EXPIRES').required().asString(),
+  rtSecret: env.get('RT_SECRET').required().asString(),
+  rtSecretExpires: env.get('RT_SECRET_EXPIRES').required().asString(),
+});
