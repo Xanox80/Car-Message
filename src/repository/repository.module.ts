@@ -1,9 +1,14 @@
 import { ConfigService } from '@nestjs/config';
-import { MessageRepository } from './repositories';
+import { MessageRepository, UserRepository } from './repositories';
 import { Global, Module } from '@nestjs/common';
 import { PrismaService } from 'prisma/prisma.service';
 
-const providers = [PrismaService, ConfigService, MessageRepository];
+const providers = [
+  PrismaService,
+  ConfigService,
+  MessageRepository,
+  UserRepository,
+];
 
 @Module({
   imports: [],
