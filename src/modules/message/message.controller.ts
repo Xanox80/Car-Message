@@ -1,11 +1,4 @@
-import {
-  Body,
-  Controller,
-  Get,
-  HttpCode,
-  HttpStatus,
-  Post,
-} from '@nestjs/common';
+import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
 import {
   ApiTags,
   ApiBearerAuth,
@@ -14,29 +7,33 @@ import {
 } from '@nestjs/swagger';
 import { MessageService } from './message.service';
 import { MessageDto, MessageResponseDto } from './dto';
+import { EmailService } from '../email/email.service'; // Імпортуйте сервіс для листів
 
 @Controller('message')
 @ApiTags('Message')
 @ApiBearerAuth()
-@Controller('Message')
 export class MessageController {
-  constructor(private readonly messageService: MessageService) {}
+  constructor(
+    private readonly messageService: MessageService,
+    private readonly emailService: EmailService, // Інжектуйте EmailService
+  ) {}
 
   @ApiOperation({ description: 'Create a new message' })
-  @HttpCode(HttpStatus.OK)
+  @HttpCode(HttpStatus.CREATED)
   @ApiResponse({ type: MessageResponseDto })
-  @Post('/createMessage')
   @Post('createMessage')
   async createMessage(@Body() messageDto: MessageDto): Promise<any> {
-    console.log('Received messageDto:', messageDto); // Лог для перевірки
-    return await this.messageService.createMessage(messageDto);
-  }
+    console.log('Received messageDto:', messageDto);
 
-  @ApiOperation({ description: 'Create a new message' })
-  @HttpCode(HttpStatus.OK)
-  @ApiResponse({ type: MessageResponseDto })
-  @Get('/getMessage')
-  async getMessage(): Promise<any> {
-    return await this.messageService.getMessage();
+    const savedMessage = await this.messageService.createMessage(messageDto);
+
+    // Відправка повідомлення на Gmail
+    await this.emailService.sendEmail(
+      'recipient@gmail.com', // Змінити на отримувача
+      'New Message Created',
+      `Message content: ${messageDto.text}`,
+    );
+
+    return savedMessage;
   }
 }

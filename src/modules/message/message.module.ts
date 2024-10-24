@@ -2,8 +2,10 @@ import { RepositoryModule } from 'src/repository';
 import { MessageService } from './message.service';
 import { Module } from '@nestjs/common';
 import { MessageController } from './message.controller';
+import { MessageGateway } from './message.gateway';
+import { EmailService } from '../email';
 
-const providers = [MessageService];
+const providers = [MessageService, MessageGateway, EmailService];
 const imports = [RepositoryModule];
 
 @Module({

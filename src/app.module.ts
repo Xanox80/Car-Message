@@ -4,6 +4,7 @@ import { MessageModule } from './modules/message/message.module';
 import { PrismaService } from 'prisma/prisma.service';
 import { RepositoryModule } from './repository';
 import { UserModule } from './modules/user';
+import { EmailModule } from './modules/email';
 
 @Module({
   imports: [
@@ -11,6 +12,7 @@ import { UserModule } from './modules/user';
     RepositoryModule,
     MessageModule,
     UserModule,
+    EmailModule,
   ],
   controllers: [],
   providers: [ConfigService, PrismaService],
