@@ -9,8 +9,11 @@ datasource db {
 
 model Message {
   id        Int      @default(autoincrement()) @id
-  text    String @db.VarChar(255)
-  number  Int
+  text      String   @db.VarChar(255)
+  number    Int
+  fileUrl   String?  @db.VarChar(255)
+  createdAt DateTime @default(now())           @db.Timestamptz(3)
+
 }
 
 model User {

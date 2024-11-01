@@ -9,6 +9,7 @@ import { Server, Socket } from 'socket.io';
 import { MessageService } from './message.service';
 import { MessageDto } from './dto';
 import { Logger } from '@nestjs/common';
+import { Message } from '@prisma/client';
 
 @WebSocketGateway({
   cors: {
@@ -49,5 +50,10 @@ export class MessageGateway {
   async handleFindAllMessages() {
     const messages = await this.messageService.getMessage();
     return messages;
+  }
+
+  @SubscribeMessage('notifyNewMessage')
+  async notifyNewMessage(@MessageBody() message: Message) {
+    this.server.emit('newMessageNotification', message);
   }
 }

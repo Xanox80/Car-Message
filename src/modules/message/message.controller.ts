@@ -1,4 +1,12 @@
-import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Post,
+  Query,
+} from '@nestjs/common';
 import {
   ApiTags,
   ApiBearerAuth,
@@ -7,7 +15,7 @@ import {
 } from '@nestjs/swagger';
 import { MessageService } from './message.service';
 import { MessageDto, MessageResponseDto } from './dto';
-import { EmailService } from '../email/email.service'; // Імпортуйте сервіс для листів
+import { EmailService } from '../email/email.service';
 
 @Controller('message')
 @ApiTags('Message')
@@ -15,7 +23,7 @@ import { EmailService } from '../email/email.service'; // Імпортуйте �
 export class MessageController {
   constructor(
     private readonly messageService: MessageService,
-    private readonly emailService: EmailService, // Інжектуйте EmailService
+    private readonly emailService: EmailService,
   ) {}
 
   @ApiOperation({ description: 'Create a new message' })
@@ -27,13 +35,41 @@ export class MessageController {
 
     const savedMessage = await this.messageService.createMessage(messageDto);
 
-    // Відправка повідомлення на Gmail
     await this.emailService.sendEmail(
-      'recipient@gmail.com', // Змінити на отримувача
+      'bogdanservetnik80@gmail.com',
       'New Message Created',
       `Message content: ${messageDto.text}`,
     );
 
     return savedMessage;
+  }
+
+  @ApiOperation({ description: 'Get all messages' })
+  @ApiResponse({ type: [MessageResponseDto] })
+  @Get('getAllMessages')
+  async getAllMessages(): Promise<MessageResponseDto[]> {
+    const messages = await this.messageService.getMessage();
+    console.log('Retrieved messages:', messages);
+    return messages;
+  }
+
+  @ApiOperation({ description: 'Get messages statistics' })
+  @HttpCode(HttpStatus.OK)
+  @ApiResponse({ description: 'Returns statistics of messages' })
+  @Get('stats')
+  async getMessagesStats() {
+    return await this.messageService.getMessagesStats();
+  }
+
+  @ApiOperation({ description: 'Get filtered messages' })
+  @HttpCode(HttpStatus.OK)
+  @ApiResponse({ description: 'Returns messages based on filter criteria' })
+  @Get('filter')
+  async getFilteredMessages(
+    @Query('text') text?: string,
+    @Query('number') number?: number,
+  ) {
+    const query = { text, number };
+    return await this.messageService.getFilteredMessages(query);
   }
 }

@@ -14,4 +14,14 @@ export class MessageDto {
   @IsNotEmpty()
   @Expose()
   number: number;
+
+  @ApiProperty({ example: 'message' })
+  @IsString()
+  @IsNotEmpty()
+  @Expose()
+  fileUrl?: string;
+
+  @ApiProperty()
+  @Expose()
+  createdAt: Date;
 }

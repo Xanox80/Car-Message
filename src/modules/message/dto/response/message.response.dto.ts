@@ -16,6 +16,16 @@ export class MessageResponseDto {
   @Expose()
   number: number;
 
+  @ApiProperty({ example: 'message' })
+  @IsString()
+  @IsNotEmpty()
+  @Expose()
+  fileUrl?: string;
+
+  @ApiProperty()
+  @Expose()
+  createdAt: Date;
+
   public static mapFrom(data: Message): MessageResponseDto {
     return plainToClass(MessageResponseDto, data, {
       excludeExtraneousValues: true,
