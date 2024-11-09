@@ -48,7 +48,7 @@ export class MessageGateway {
 
   @SubscribeMessage('findAllMessages')
   async handleFindAllMessages() {
-    const messages = await this.messageService.getMessage();
+    const messages = await this.messageService.getPaginatedMessages();
     return messages;
   }
 

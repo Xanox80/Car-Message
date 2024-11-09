@@ -10,23 +10,23 @@ import { ApiJwtPayload } from 'src/interface/jwt-payload.interface';
 import { UserDto, UserRequestDto } from 'src/modules/user';
 import * as bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
+import { UserUpdataRequestDto } from 'src/modules/user/dto/request/user-updata-request.dto';
 
 const { atSecret, atSecretExpires, rtSecret, rtSecretExpires } =
   getAuthSecret();
 
 @Injectable()
 export class UserRepository {
+  findById(id: string) {
+    throw new Error('Method not implemented.');
+  }
   constructor(private readonly prisma: PrismaService) {}
 
   async register(data: UserDto): Promise<User> {
-    const { name, password } = data;
+    const { name, password, role = 'user' } = data;
 
     const check = await this.prisma.user.findFirst({
-      where: {
-        name: {
-          equals: name,
-        },
-      },
+      where: { name: { equals: name } },
     });
 
     if (check) {
@@ -35,21 +35,15 @@ export class UserRepository {
 
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = await this.prisma.user.create({
-      data: {
-        name,
-        password: hashedPassword,
-      },
+      data: { name, password: hashedPassword, role },
     });
 
     const tokenPair = await this.generateTokenPair({
       id: user.id,
-      name: user.name,
     });
 
     const updatedUser = await this.prisma.user.update({
-      where: {
-        id: user.id,
-      },
+      where: { id: user.id },
       data: {
         access_token: tokenPair.access_token,
         refresh_token: tokenPair.refresh_token,
@@ -111,6 +105,50 @@ export class UserRepository {
       data: {
         refresh_token: hashedRefreshToken,
       } as Prisma.UserUpdateInput,
+    });
+  }
+
+  async updateUserById(
+    id: string,
+    userParams: UserUpdataRequestDto,
+  ): Promise<User> {
+    try {
+      const { name, password } = userParams;
+
+      // Знаходимо користувача за ідентифікатором
+      const user = await this.prisma.user.findUnique({
+        where: {
+          id: id,
+        },
+      });
+
+      if (!user) {
+        throw new NotFoundException('User not found!');
+      }
+
+      // Оновлюємо користувача з новими параметрами
+      const updatedUser = await this.prisma.user.update({
+        where: {
+          id: id,
+        },
+        data: {
+          name,
+          password,
+        },
+      });
+
+      return updatedUser;
+    } catch (error) {
+      // Обробка можливих помилок
+      throw new Error(`Failed to update user: ${error.message}`);
+    }
+  }
+
+  async deleteUser(id: string): Promise<User> {
+    return this.prisma.user.delete({
+      where: {
+        id,
+      },
     });
   }
 }

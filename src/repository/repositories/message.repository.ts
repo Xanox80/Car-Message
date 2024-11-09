@@ -11,13 +11,36 @@ export class MessageRepository {
     return this.prisma.message.create({
       data: {
         ...messageDto,
-        createdAt: new Date(), // Явне встановлення поточної дати
+        createdAt: new Date(),
       },
     });
   }
 
-  async getMessage(): Promise<Message[]> {
-    return await this.prisma.message.findMany({});
+  async deleteMessage(id: number): Promise<Message> {
+    return this.prisma.message.delete({
+      where: {
+        id,
+      },
+    });
+  }
+
+  async updateMessage(id: number, messageDto: MessageDto): Promise<Message> {
+    return this.prisma.message.update({
+      where: {
+        id,
+      },
+      data: messageDto,
+    });
+  }
+
+  async getMessages(
+    page: number = 1,
+    pageSize: number = 10,
+  ): Promise<Message[]> {
+    return await this.prisma.message.findMany({
+      skip: (page - 1) * pageSize,
+      take: pageSize,
+    });
   }
   async getFilteredMessages(query: {
     text?: string;

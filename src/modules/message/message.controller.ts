@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpCode,
   HttpStatus,
@@ -44,13 +45,44 @@ export class MessageController {
     return savedMessage;
   }
 
-  @ApiOperation({ description: 'Get all messages' })
-  @ApiResponse({ type: [MessageResponseDto] })
-  @Get('getAllMessages')
-  async getAllMessages(): Promise<MessageResponseDto[]> {
-    const messages = await this.messageService.getMessage();
-    console.log('Retrieved messages:', messages);
-    return messages;
+  @Get()
+  async getPaginatedMessages(
+    @Query('page') page: string = '1', // Default to page 1
+    @Query('pageSize') pageSize: string = '10', // Default to 10 messages per page
+  ): Promise<{ messages: MessageResponseDto[]; total: number }> {
+    const parsedPage = parseInt(page, 10);
+    const parsedPageSize = parseInt(pageSize, 10);
+    const { messages, total } = await this.messageService.getPaginatedMessages(
+      parsedPage,
+      parsedPageSize,
+    );
+
+    // You may want to map messages to MessageResponseDto if you have a specific DTO
+    return {
+      messages,
+      total,
+    };
+  }
+
+  @ApiOperation({ description: 'Delete a message' })
+  @HttpCode(HttpStatus.OK)
+  @ApiResponse({ type: MessageResponseDto })
+  @Delete('deleteMessage')
+  async deleteMessage(@Query('id') id: number): Promise<MessageResponseDto> {
+    const message = await this.messageService.deleteMessage(id);
+    return message;
+  }
+
+  @ApiOperation({ description: 'Update a message' })
+  @HttpCode(HttpStatus.OK)
+  @ApiResponse({ type: MessageResponseDto })
+  @Post('updateMessage')
+  async updateMessage(
+    @Query('id') id: number,
+    @Body() messageDto: MessageDto,
+  ): Promise<MessageResponseDto> {
+    const message = await this.messageService.updateMessage(id, messageDto);
+    return message;
   }
 
   @ApiOperation({ description: 'Get messages statistics' })

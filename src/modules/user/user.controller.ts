@@ -1,4 +1,13 @@
-import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  HttpCode,
+  HttpStatus,
+  Param,
+  Post,
+  Query,
+} from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiOperation,
@@ -6,7 +15,9 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { UserService } from './user.service';
-import { UserResponseDto } from './dto';
+import { UserDto, UserResponseDto } from './dto';
+import { RolesEnum } from 'src/enum/roles.enum';
+import { UserUpdataRequestDto } from './dto/request/user-updata-request.dto';
 
 @Controller('user')
 @ApiTags('User')
@@ -15,7 +26,6 @@ import { UserResponseDto } from './dto';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @Post('register')
   @ApiOperation({ description: 'login' })
   @HttpCode(HttpStatus.OK)
   @ApiResponse({ type: UserResponseDto })
@@ -35,5 +45,28 @@ export class UserController {
     @Body() authParams: UserResponseDto,
   ): Promise<UserResponseDto> {
     return this.userService.login(authParams);
+  }
+
+  @Post('/update/:id')
+  // @HttpUserRole(RolesEnum.ADMIN, RolesEnum.MEMBER)
+  @ApiOperation({ description: 'UpdateUser' })
+  @HttpCode(HttpStatus.OK)
+  @ApiResponse({ type: UserResponseDto })
+  @ApiBearerAuth()
+  async updateUser(
+    @Param('id') id: string,
+    @Body() userParams: UserUpdataRequestDto,
+  ) {
+    userParams.id = id;
+    return this.userService.updateUserById(id, userParams);
+  }
+
+  @Delete('/delete/:id')
+  // @HttpUserRole(RolesEnum.ADMIN, RolesEnum.MEMBER)
+  @ApiOperation({ description: 'DeleteUser' })
+  @HttpCode(HttpStatus.OK)
+  @ApiBearerAuth()
+  deleteUser(@Param('id') id: string) {
+    this.userService.deleteUser(id);
   }
 }
