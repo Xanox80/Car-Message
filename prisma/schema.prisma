@@ -22,4 +22,5 @@ model User {
   password      String  @db.VarChar(255)
   access_token  String?
 	refresh_token String?
+  role          String  @db.VarChar(255)
 }

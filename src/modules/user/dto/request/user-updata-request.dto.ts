@@ -3,7 +3,7 @@ import { Expose } from 'class-transformer';
 import { IsNotEmpty, IsString } from 'class-validator';
 import { RolesEnum } from 'src/enum/roles.enum';
 
-export class UserDto {
+export class UserUpdataRequestDto {
   @Expose()
   id: string;
 

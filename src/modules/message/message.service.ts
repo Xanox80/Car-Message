@@ -8,7 +8,7 @@ import { Message } from '@prisma/client';
 export class MessageService {
   constructor(
     private readonly messageRepository: MessageRepository,
-    private readonly prisma: PrismaService, // Inject PrismaService
+    private readonly prisma: PrismaService,
   ) {}
 
   async createMessage(messageDto: MessageDto): Promise<any> {
@@ -16,8 +16,24 @@ export class MessageService {
     return this.messageRepository.createMessage(messageDto);
   }
 
-  async getMessage(): Promise<Message[]> {
-    return await this.prisma.message.findMany(); // Retrieve all messages
+  async getPaginatedMessages(
+    page: number = 1,
+    pageSize: number = 10,
+  ): Promise<{ messages: Message[]; total: number }> {
+    const messages = await this.messageRepository.getMessages(page, pageSize);
+    const total = await this.prisma.message.count();
+    return {
+      messages,
+      total,
+    };
+  }
+
+  async deleteMessage(id: number): Promise<Message> {
+    return this.messageRepository.deleteMessage(id);
+  }
+
+  async updateMessage(id: number, messageDto: MessageDto): Promise<Message> {
+    return this.messageRepository.updateMessage(id, messageDto);
   }
   async getMessagesStats() {
     const totalMessages = await this.prisma.message.count();
