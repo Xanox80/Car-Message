@@ -24,3 +24,18 @@ model User {
 	refresh_token String?
   role          String  @db.VarChar(255)
 }
+
+model Reviews {
+  id            String @id @default(uuid())
+  reviews       String   @db.VarChar(255)
+  advantages    String   @db.VarChar(255)
+  disadvantages String   @db.VarChar(255)
+  stars         Int
+}
+
+model Accounting {
+  id       String   @id @default(uuid())
+  cost     String   @db.VarChar(255)
+  mileage  String   @db.VarChar(255)
+  accident String   @db.VarChar(255)
+}
