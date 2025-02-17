@@ -9,8 +9,8 @@ export class EmailService {
     this.transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
-        user: process.env.GMAIL_USER, // Ваш Gmail
-        pass: process.env.GMAIL_PASSWORD, // Пароль або app password
+        user: process.env.GMAIL_USER,
+        pass: process.env.GMAIL_PASSWORD,
       },
     });
   }

@@ -1,6 +1,7 @@
 import { ConfigService } from '@nestjs/config';
 import {
   AccauntingRepository,
+  CarsRepository,
   MessageRepository,
   ReviewsRepository,
   UserRepository,
@@ -8,6 +9,7 @@ import {
 import { Global, Module } from '@nestjs/common';
 import { PrismaService } from 'prisma/prisma.service';
 import { GoogleSheetsService } from 'src/googleSheet/googleSheet.servise';
+import { PhotoRepository } from './repositories/photo.repository';
 
 const providers = [
   PrismaService,
@@ -17,6 +19,8 @@ const providers = [
   UserRepository,
   ReviewsRepository,
   AccauntingRepository,
+  PhotoRepository,
+  CarsRepository,
 ];
 
 @Module({

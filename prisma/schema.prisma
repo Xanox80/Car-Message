@@ -39,3 +39,24 @@ model Accounting {
   mileage  String   @db.VarChar(255)
   accident String   @db.VarChar(255)
 }
+
+model Cars {
+  id          String  @id @default(uuid())
+  brand       String  @db.VarChar(255)
+  model       String  @db.VarChar(255)
+  year        String  @db.VarChar(255)
+  color       String  @db.VarChar(255)
+  engine      String  @db.VarChar(255)
+  transmission String @db.VarChar(255)
+  drive       String  @db.VarChar(255)
+  body        String  @db.VarChar(255)
+  price       String  @db.VarChar(255)
+  description String  @db.VarChar(255)
+  photo String @db.Text
+}
+
+model Photos {
+  id    String @id @default(uuid())
+  photo String @db.Text
+  
+}

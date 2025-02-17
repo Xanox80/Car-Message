@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "Cars" ALTER COLUMN "year" SET DATA TYPE VARCHAR(255);

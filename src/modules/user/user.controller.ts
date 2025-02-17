@@ -48,7 +48,6 @@ export class UserController {
   }
 
   @Post('/update/:id')
-  // @HttpUserRole(RolesEnum.ADMIN, RolesEnum.MEMBER)
   @ApiOperation({ description: 'UpdateUser' })
   @HttpCode(HttpStatus.OK)
   @ApiResponse({ type: UserResponseDto })
@@ -62,7 +61,6 @@ export class UserController {
   }
 
   @Delete('/delete/:id')
-  // @HttpUserRole(RolesEnum.ADMIN, RolesEnum.MEMBER)
   @ApiOperation({ description: 'DeleteUser' })
   @HttpCode(HttpStatus.OK)
   @ApiBearerAuth()

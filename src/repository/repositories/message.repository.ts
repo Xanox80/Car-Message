@@ -15,20 +15,28 @@ export class MessageRepository {
   ) {}
 
   async createMessage(messageDto: MessageDto): Promise<Message> {
-    const savedMessage = await this.prisma.message.create({
-      data: messageDto,
-    });
+    try {
+      console.log('Attempting to save message to DB:', messageDto);
 
-    // Додайте дані до Google Sheets
-    await this.googleSheetsService.appendData(this.spreadsheetId, 'Аркуш1', [
-      [
-        savedMessage.id,
-        savedMessage.text,
-        savedMessage.createdAt.toISOString(),
-      ],
-    ]);
+      const savedMessage = await this.prisma.message.create({
+        data: messageDto,
+      });
 
-    return savedMessage;
+      console.log('Saved message in DB:', savedMessage);
+
+      await this.googleSheetsService.appendData(this.spreadsheetId, 'Аркуш1', [
+        [
+          savedMessage.id,
+          savedMessage.text,
+          savedMessage.createdAt.toISOString(),
+        ],
+      ]);
+
+      return savedMessage;
+    } catch (error) {
+      console.error('Error saving message to DB:', error);
+      throw new Error('Failed to save message to database');
+    }
   }
 
   async deleteMessage(id: number): Promise<Message> {

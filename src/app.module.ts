@@ -9,6 +9,8 @@ import { HttpExceptionFilter } from './filters/http-exception.filter';
 import { ReviewsModule } from './modules/reviews/reviews.module';
 import { AccauntingModule } from './modules/accounting/accaunting.module';
 import { GoogleSheetsModule } from './googleSheet/google.module';
+import { PhotoModule } from './modules/photo/photo.module';
+import { CarsModule } from './modules/cars/cars.module';
 
 @Module({
   imports: [
@@ -20,6 +22,8 @@ import { GoogleSheetsModule } from './googleSheet/google.module';
     ReviewsModule,
     AccauntingModule,
     GoogleSheetsModule,
+    PhotoModule,
+    CarsModule,
   ],
   controllers: [],
   providers: [ConfigService, PrismaService, HttpExceptionFilter],
